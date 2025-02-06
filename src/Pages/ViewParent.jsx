@@ -139,7 +139,7 @@ const ViewParent = () => {
                   </button>
                   <button
                     className="btn btn-danger ms-2"
-                    onClick={() => handleDelete(parent.id)}
+                    onClick={() => handleDelete(parent.pid)}
                   >
                     Delete
                   </button>
