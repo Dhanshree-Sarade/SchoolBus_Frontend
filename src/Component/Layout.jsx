@@ -57,6 +57,71 @@
 
 // export default Layout;
 
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Outlet } from "react-router-dom";
+// import Sidebar from "./Sidebar"; // Admin Sidebar
+// import ParentSidebar from "./ParentSidebar"; // Parent Sidebar
+// import DriverSidebar from "./DriverSidebar"; // Driver Sidebar
+// import Footer from "./Footer";
+// import NavBar from "./NavBar";
+
+// const Layout = () => {
+//   const [userRole, setUserRole] = useState(null);
+//   const [userId, setUserId] = useState(null);
+//   const [email, setEmail] = useState(null);
+//   const [password, setPassword] = useState(null);
+
+//   useEffect(() => {
+//     // Get the user data from localStorage
+//     const storedUserData = localStorage.getItem("userData");
+  
+//     if (storedUserData) {
+//       const parsedData = JSON.parse(storedUserData);
+//       setUserRole(parsedData.userRole);
+//       setUserId(parsedData.userId);
+//       setEmail(parsedData.email);
+//       setPassword(parsedData.password);
+//     }
+//   }, []);
+  
+
+//   // Function to choose the correct sidebar
+//   const renderSidebar = () => {
+//     if (userRole === "ADMIN") return <Sidebar />;
+//     if (userRole === "PARENT") return <ParentSidebar />;
+//     if (userRole === "DRIVER") return <DriverSidebar />;
+//     return null;
+//   };
+
+//   return (
+//     <div className="wrapper">
+//       {renderSidebar()}
+
+//       <div className="main-panel">
+//         <div className="main-header">
+//           <NavBar />
+//         </div>
+
+//         <div className="container">
+//           <div className="page-inner">
+//             <Outlet /> {/* Dynamic content */}
+//           </div>
+//         </div>
+
+//         <Footer />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Layout;
+
+
+
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar"; // Admin Sidebar
@@ -67,31 +132,57 @@ import NavBar from "./NavBar";
 
 const Layout = () => {
   const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
 
   useEffect(() => {
-    // Get the user role from localStorage (make sure the key matches 'userRole')
-    const role = localStorage.getItem("userRole"); 
-    setUserRole(role);
+    // Get the user data from localStorage
+    const storedUserData = localStorage.getItem("userData");
+  
+    if (storedUserData) {
+      const parsedData = JSON.parse(storedUserData);
+      setUserRole(parsedData.userRole);
+      setUserId(parsedData.userId);
+      setEmail(parsedData.email);
+      setPassword(parsedData.password);
+    }
   }, []);
+  
+
+  // Function to choose the correct sidebar
+  // const renderSidebar = () => {
+  //   if (userRole === "ADMIN") return <Sidebar />;
+  //   if (userRole === "PARENT") return <ParentSidebar />;
+  //   if (userRole === "DRIVER") return <DriverSidebar />;
+  //   return null;
+  // };
+
+  // Toggle sidebar visibility for mobile
+  const toggleMobileSidebar = () => {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
+  };
 
   // Function to choose the correct sidebar
   const renderSidebar = () => {
-    if (userRole === "ADMIN") return <Sidebar />;
-    if (userRole === "PARENT") return <ParentSidebar />;
-    if (userRole === "DRIVER") return <DriverSidebar />;
-    return null; // No sidebar if role is unknown
+    if (userRole === "ADMIN") return <Sidebar isMobileSidebarOpen={isMobileSidebarOpen} toggleMobileSidebar={toggleMobileSidebar} />;
+    if (userRole === "PARENT") return <ParentSidebar isMobileSidebarOpen={isMobileSidebarOpen} toggleMobileSidebar={toggleMobileSidebar} />;
+    if (userRole === "DRIVER") return <DriverSidebar isMobileSidebarOpen={isMobileSidebarOpen} toggleMobileSidebar={toggleMobileSidebar} />;
+    return null;
   };
 
   return (
     <div className="wrapper">
-      {renderSidebar()}  {/* Render Sidebar based on role */}
+      {renderSidebar()}
 
       <div className="main-panel">
         <div className="main-header">
-          <NavBar />
+          <NavBar toggleMobileSidebar={toggleMobileSidebar} />
         </div>
 
-        <div className="container">
+        <div className={`container content ${isMobileSidebarOpen ? "overlay-active" : ""}`}>
           <div className="page-inner">
             <Outlet /> {/* Dynamic content */}
           </div>

@@ -8,11 +8,12 @@ const DriverSidebar = () => {
         <div className="logo-header" data-background-color="dark">
           <Link to="/" className="logo">
             <img
-              src="assets/img/kaiadmin/logo_light.svg"
-              alt="navbar brand"
-              className="navbar-brand"
-              height="20"
-            />
+                src="assets/img/EzioQuiz.png"
+                alt="navbar brand"
+                className="navbar-brand"
+                height="20"
+              />
+              <span className="ms-2 text-white fw-bold">Ezio Infotech</span>
           </Link>
           <div className="nav-toggle">
             <button className="btn btn-toggle toggle-sidebar">
@@ -37,12 +38,35 @@ const DriverSidebar = () => {
               </Link>
             </li>
 
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link to="/student-status">
                 <i className="fas fa-user-check"></i>
                 <p>Student Status</p>
               </Link>
+            </li> */}
+
+            <li className="nav-item">
+              <a data-bs-toggle="collapse" href="#studentSection">
+                <i className="fas fa-child"></i>
+                <p>Student Status</p>
+                <span className="caret"></span>
+              </a>
+              <div className="collapse" id="studentSection">
+                <ul className="nav nav-collapse">
+                  <li>
+                    <Link to="/student-status">
+                      <span className="sub-item">Home to School Trip</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/student-status-reverse">
+                      <span className="sub-item">School to Home Trip</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </li>
+
 
             <li className="nav-item">
               <Link to="/report-issue">

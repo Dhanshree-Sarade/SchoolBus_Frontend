@@ -1,0 +1,131 @@
+/* ===== Global Styles ===== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* ===== Containers ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+  
+  /* ===== Cards ===== */
+  .card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
+  }
+  
+  /* ===== Buttons ===== */
+  .btn {
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  /* ===== Navigation Bar ===== */
+  .navbar {
+    padding: 15px;
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+  
+  /* ===== Mobile View (for screens ≤ 768px) ===== */
+
+  @media (max-width: 996px) and (max-height: 493px) {
+    .sidebar, .navbar {
+      display: none; /* Hide sidebar and navbar */
+    }
+  }
+  
+  @media (max-width: 996px) and (max-height: 492px) {
+    .sidebar, .navbar {
+      display: flex; /* Show sidebar and navbar below 996x493 */
+    }
+  }
+  
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 5px;
+    }
+  
+    .navbar {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .navbar-nav {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .card {
+      width: 100%;
+      margin: 10px 0;
+    }
+  
+    h2, h3 {
+      font-size: 1.2rem;
+    }
+  
+    .list-group-item {
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* ===== Smaller Mobile Screens (≤ 480px) ===== */
+  @media (max-width: 480px) {
+    .btn {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  
+    .card {
+      padding: 10px;
+    }
+  
+    .card-header {
+      font-size: 1rem;
+      text-align: center;
+    }
+  
+    .card-body {
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  
+    .list-group-item {
+      font-size: 0.85rem;
+    }
+  }
+  
+
+  @media screen and (max-width: 995px) and (max-height: 492px) {
+    /* .sidebar,
+    .navbar {
+      display: none !important;
+    } */
+  }
+  
+  @media screen and (max-width: 995px) and (min-height: 493px) {
+    .sidebar,
+    .navbar {
+      display: block !important;
+    }
+  }
+  
+  @media screen and (min-width: 996px) {
+    .sidebar,
+    .navbar {
+      display: block !important;
+    }
+  }
+  

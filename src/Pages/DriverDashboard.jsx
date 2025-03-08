@@ -2,93 +2,77 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const DriverDashboard = () => {
-  const [students, setStudents] = useState([]);
-  const [issueMessage, setIssueMessage] = useState("");
-  const driverEmail = localStorage.getItem("driverEmail"); // Assuming email is stored after login
+  const [studentCount, setStudentCount] = useState(0);
+  const [busRoutes, setBusRoutes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch driver details from localStorage
+  const storedUser = JSON.parse(localStorage.getItem("userData"));
+  const driverId = storedUser?.userId || ""; 
 
   useEffect(() => {
-    fetchAssignedStudents();
-  }, []);
+    if (driverId) {
+      fetchStudentCount();
+      fetchBusRoutes();
+    }
+  }, [driverId]);
 
-  const fetchAssignedStudents = async () => {
+  // Fetch assigned student count
+  const fetchStudentCount = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/driver/students?email=${driverEmail}`);
-      setStudents(response.data);
+      setLoading(true);
+      const response = await axios.get(`http://localhost:8080/assigned/${driverId}`);
+      setStudentCount(response.data.length || 0); // Get the array length
     } catch (error) {
-      console.error("Error fetching students:", error);
+      console.error("Error fetching student count:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const updateStatus = async (studentId, type) => {
+  // Fetch bus route details
+  const fetchBusRoutes = async () => {
     try {
-      await axios.post(`http://localhost:8080/driver/updateStatus`, {
-        studentId,
-        type,
-      });
-
-      fetchAssignedStudents(); // Refresh data
+      const response = await axios.get(`http://localhost:8080/api/assigned-bus/busRouteByDriverId/${driverId}`);
+      setBusRoutes(response.data || []);
     } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
-
-  const reportIssue = async () => {
-    try {
-      await axios.post("http://localhost:8080/driver/reportIssue", {
-        email: driverEmail,
-        issue: issueMessage,
-      });
-
-      setIssueMessage(""); // Clear issue input
-      alert("Issue reported successfully!");
-    } catch (error) {
-      console.error("Error reporting issue:", error);
+      console.error("Error fetching bus routes:", error);
     }
   };
 
   return (
-    <div className="driver-dashboard">
-      <h2>Driver Dashboard</h2>
-      <h3>Manage Student Pickup & Drop</h3>
+    <div className="container mt-4">
+      <h2 className="text-center">Driver Dashboard</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Pickup Status</th>
-            <th>Drop Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.length > 0 ? (
-            students.map((student) => (
-              <tr key={student.id}>
-                <td>{student.name}</td>
-                <td>{student.pickupStatus || "Pending"}</td>
-                <td>{student.dropStatus || "Pending"}</td>
-                <td>
-                  <button onClick={() => updateStatus(student.id, "pickup")}>Mark Picked Up</button>
-                  <button onClick={() => updateStatus(student.id, "drop")}>Mark Dropped</button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No students assigned</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div className="row mt-3">
+        {/* Student Count Card */}
+        <div className="col-md-6">
+          <div className="card text-white bg-primary mb-3">
+            <div className="card-header">Assigned Students</div>
+            <div className="card-body">
+              {loading ? <p>Loading...</p> : <h4 className="card-title">{studentCount}</h4>}
+            </div>
+          </div>
+        </div>
 
-      <h3>Report an Issue</h3>
-      <input
-        type="text"
-        value={issueMessage}
-        onChange={(e) => setIssueMessage(e.target.value)}
-        placeholder="Enter issue (e.g., bus breakdown)"
-      />
-      <button onClick={reportIssue}>Submit Issue</button>
+        {/* Bus Route Details */}
+        <div className="col-md-6">
+          <div className="card text-white bg-success mb-3">
+            <div className="card-header">Bus Routes</div>
+            <div className="card-body">
+              {busRoutes.length > 0 ? (
+                <ul>
+                  {busRoutes.map((route, index) => (
+                    <li key={index}>{route.routeName} {route.startLocation}  {route.endLocation}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No routes assigned</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

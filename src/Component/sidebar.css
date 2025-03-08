@@ -1,0 +1,156 @@
+
+
+/* Container */
+.sidebar {
+    width: 270px;
+    background-color: #1b2330;
+    height: 100vh;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebar.collapsed {
+    width: 80px; /* Collapsed width */
+  }
+  
+  /* Header area */
+  .sidebar-header {
+    padding: 10px;
+    background-color: #111825;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* When expanded */
+  .sidebar-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  /* Logo area (when expanded) */
+  .logo-area {
+    display: flex;
+    align-items: center;
+  }
+  .logo-img {
+    height: 30px;
+    margin-right: 8px;
+  }
+  .logo-text {
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  
+  /* Collapsed header with 3-dot icon */
+  .collapsed-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .three-dot-icon {
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Toggle button */
+  .btn.btn-toggle.toggle-sidebar {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  /* Body */
+  .sidebar-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+  }
+  
+  /* Nav items */
+  .nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-item {
+    margin: 5px 0;
+  }
+  
+  .nav-item a {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .nav-item a:hover {
+    background-color: #2a3240;
+  }
+  
+  /* Icon in nav items */
+  .nav-item a i {
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  
+  /* Hide text when collapsed */
+  .sidebar.collapsed .nav-item a p {
+    display: none;
+    margin: 0;
+  }
+  
+
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #2c3e50;
+    transition: all 0.3s;
+  }
+  .sidebar.collapsed {
+    width: 60px;
+  }
+  .navbar-toggler {
+    border: none;
+    background: none;
+  }
+
+  
+  /* Default Sidebar Styles */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #222;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: all 0.3s ease;
+}
+
+/* Hide Sidebar in Mobile View by Default */
+@media (max-width: 1024px) {
+  .sidebar {
+    left: -250px; /* Hide sidebar */
+  }
+
+  .sidebar.show-mobile-sidebar {
+    left: 0; /* Show sidebar when toggled */
+  }
+}
+
+
+#mobile-sidebar.open {
+    left: 268px !important;
+}

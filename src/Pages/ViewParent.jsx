@@ -4,7 +4,7 @@ import axios from "axios";
 const ViewParent = () => {
   const [parents, setParents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedParent, setSelectedParent] = useState(null); // For editing
+  const [selectedParent, setSelectedParent] = useState(null);
   const [formData, setFormData] = useState({
     parentFirstName: "",
     parentLastName: "",
@@ -13,16 +13,16 @@ const ViewParent = () => {
     email: "",
   });
 
-  // Fetch parents from the backend
+  const [errors, setErrors] = useState({}); // Store validation errors
+
   useEffect(() => {
     const fetchParents = async () => {
       try {
         const response = await axios.get("http://localhost:8080/getParent");
-        console.log("Fetched Parents Data:", response.data); // Log the data before handling any error
         setParents(response.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching parents:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -30,15 +30,37 @@ const ViewParent = () => {
     fetchParents();
   }, []);
 
-  // Handle input changes in edit form
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    // Clear error when user starts typing
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  // Edit parent
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!/^[A-Za-z]{2,}$/.test(formData.parentFirstName))
+      newErrors.parentFirstName = "First name must be at least 2 letters.";
+
+    if (!/^[A-Za-z]{2,}$/.test(formData.parentLastName))
+      newErrors.parentLastName = "Last name must be at least 2 letters.";
+
+    if (!/^\d{10}$/.test(formData.mobNo))
+      newErrors.mobNo = "Mobile number must be exactly 10 digits.";
+
+    if (formData.address.trim().length < 5)
+      newErrors.address = "Address must be at least 5 characters.";
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Enter a valid email address.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
   const handleEdit = (parent) => {
-    console.log("Selected Parent:", parent); // Debugging line to check the parent object
-    setSelectedParent(parent); // Set the parent to edit
+    setSelectedParent(parent);
     setFormData({
       parentFirstName: parent.parentFirstName,
       parentLastName: parent.parentLastName,
@@ -46,28 +68,27 @@ const ViewParent = () => {
       address: parent.address,
       email: parent.email,
     });
-    // Show the modal after setting selected parent
+
     const modal = new window.bootstrap.Modal(document.getElementById("editModal"));
     modal.show();
   };
-  
 
-  // Submit edited parent data
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return; // Stop submission if validation fails
+
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:8080/editParent/${selectedParent.pid}`,
         formData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
-      console.log("Submitting with ID:", selectedParent.id); // Check the id before sending request
+
       alert("Parent details updated successfully!");
       const modal = new window.bootstrap.Modal(document.getElementById("editModal"));
-      modal.hide(); // Hide the modal after submission
-      setSelectedParent(null); // Close the form after submission
+      modal.hide();
+      setSelectedParent(null);
       setFormData({
         parentFirstName: "",
         parentLastName: "",
@@ -85,20 +106,16 @@ const ViewParent = () => {
     }
   };
 
-  // Delete parent
   const handleDelete = async (pid) => {
     try {
-      console.log("Deleting parent with pid:", pid); // Debugging line to ensure pid is passed correctly
       await axios.delete(`http://localhost:8080/deleteParent/${pid}`);
       alert("Parent deleted successfully!");
-      setParents(parents.filter((parent) => parent.pid !== pid)); // Make sure you're filtering with 'pid'
+      setParents(parents.filter((parent) => parent.pid !== pid));
     } catch (error) {
       console.error("Error deleting parent:", error);
       alert("Failed to delete parent.");
     }
   };
-  
-
 
   return (
     <div className="container mt-4">
@@ -131,16 +148,10 @@ const ViewParent = () => {
                 <td>{parent.address}</td>
                 <td>{parent.email}</td>
                 <td>
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => handleEdit(parent)}
-                  >
+                  <button className="btn btn-warning" onClick={() => handleEdit(parent)}>
                     Edit
                   </button>
-                  <button
-                    className="btn btn-danger ms-2"
-                    onClick={() => handleDelete(parent.pid)}
-                  >
+                  <button className="btn btn-danger ms-2" onClick={() => handleDelete(parent.pid)}>
                     Delete
                   </button>
                 </td>
@@ -160,72 +171,30 @@ const ViewParent = () => {
             </div>
             <div className="modal-body">
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    name="parentFirstName"
-                    value={formData.parentFirstName}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    name="parentLastName"
-                    value={formData.parentLastName}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Mobile Number</label>
-                  <input
-                    type="text"
-                    name="mobNo"
-                    value={formData.mobNo}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
+                {[
+                  { label: "First Name", name: "parentFirstName" },
+                  { label: "Last Name", name: "parentLastName" },
+                  { label: "Mobile Number", name: "mobNo" },
+                  { label: "Address", name: "address" },
+                  { label: "Email", name: "email", type: "email" }
+                ].map(({ label, name, type = "text" }) => (
+                  <div className="mb-3" key={name}>
+                    <label>{label}</label>
+                    <input
+                      type={type}
+                      name={name}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+                      required
+                    />
+                    {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+                  </div>
+                ))}
+
                 <div className="mb-3 d-flex justify-content-center">
-                  <button type="submit" className="btn btn-primary">
-                    Save Changes
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary ms-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
+                  <button type="submit" className="btn btn-primary">Save Changes</button>
+                  <button type="button" className="btn btn-secondary ms-2" data-bs-dismiss="modal">Cancel</button>
                 </div>
               </form>
             </div>

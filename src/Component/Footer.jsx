@@ -8,8 +8,8 @@ const Footer = () => {
             <nav className="pull-left">
               <ul className="nav">
                 <li className="nav-item">
-                  <a className="nav-link" href="http://www.themekita.com">
-                    ThemeKita
+                  <a className="nav-link" href="http://www.ezioinfotech.com">
+                    Ezio Infotech Pvt Ltd.
                   </a>
                 </li>
                 <li className="nav-item">
@@ -21,12 +21,12 @@ const Footer = () => {
               </ul>
             </nav>
             <div className="copyright">
-              2024, made with <i className="fa fa-heart heart text-danger"></i> by
-              <a href="http://www.themekita.com">ThemeKita</a>
+              2025, made with <i className="fa fa-heart heart text-danger"></i> by
+              <a href="http://www.ezioinfotech.com">Ezio Infotech</a>
             </div>
             <div>
               Distributed by
-              <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
+              <a target="_blank" href="https://ezioinfotech.com/">Ezio Infotech</a>.
             </div>
           </div>
         </footer>

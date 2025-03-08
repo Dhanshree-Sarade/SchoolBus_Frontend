@@ -5,39 +5,30 @@ const AddDriver = () => {
   const [formData, setFormData] = useState({
     driverFirstName: "",
     driverLastName: "",
-    mobNo: "",
-    address: "",
-    email: "",
-    password: "",
-    licenseNumber: "",
-    assignedBus: "", // Optionally, you can link the driver to a bus ID
+    driverMob: "",  // Updated to match backend
+    driverEmail: "",  // Updated to match backend
+    driverPassword: "",
   });
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:8080/addDriver", formData, {
         headers: { "Content-Type": "application/json" },
       });
-      alert("Driver added successfully!");
-      console.log("Response:", response.data);
+      alert(response.data);
 
-      // Reset the form after successful submission
+      // Reset form
       setFormData({
         driverFirstName: "",
         driverLastName: "",
-        mobNo: "",
-        address: "",
-        email: "",
-        password: "",
-        licenseNumber: "",
-        assignedBus: "",
+        driverMob: "",
+        driverEmail: "",
+        driverPassword: "",
       });
 
     } catch (error) {
@@ -52,7 +43,7 @@ const AddDriver = () => {
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-md-6">
-            <label>Driver First Name</label>
+            <label>First Name</label>
             <input
               type="text"
               name="driverFirstName"
@@ -63,7 +54,7 @@ const AddDriver = () => {
           </div>
 
           <div className="col-md-6">
-            <label>Driver Last Name</label>
+            <label>Last Name</label>
             <input
               type="text"
               name="driverLastName"
@@ -77,19 +68,8 @@ const AddDriver = () => {
             <label>Mobile Number</label>
             <input
               type="text"
-              name="mobNo"
-              value={formData.mobNo}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="col-md-12">
-            <label>Address</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
+              name="driverMob"
+              value={formData.driverMob}
               onChange={handleChange}
               required
             />
@@ -99,8 +79,8 @@ const AddDriver = () => {
             <label>Email</label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
+              name="driverEmail"
+              value={formData.driverEmail}
               onChange={handleChange}
               required
             />
@@ -110,30 +90,8 @@ const AddDriver = () => {
             <label>Password</label>
             <input
               type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="col-md-6">
-            <label>License Number</label>
-            <input
-              type="text"
-              name="licenseNumber"
-              value={formData.licenseNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="col-md-6">
-            <label>Assigned Bus (Bus ID)</label>
-            <input
-              type="text"
-              name="assignedBus"
-              value={formData.assignedBus}
+              name="driverPassword"
+              value={formData.driverPassword}
               onChange={handleChange}
               required
             />

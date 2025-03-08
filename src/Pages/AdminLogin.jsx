@@ -111,23 +111,66 @@ const AdminLogin = () => {
   };
 
   // Handle form submission
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setErrorMessage("");
+  
+  //   try {
+  //     const response = await axios.post("http://localhost:8080/login", null, {
+  //       params: formData,
+  //     });
+  
+  //     const { userRole, userId, email, password, message } = response.data; // Get all data
+  
+  //     alert(message); // Show login success message
+  
+  //     // Store all user details in localStorage
+  //     localStorage.setItem(
+  //       "userData",
+  //       JSON.stringify({ userRole, userId, email, password })
+  //     );
+  
+  //     // Redirect based on user role
+  //     if (userRole === "ADMIN") {
+  //       navigate("/"); // Redirect to Admin Dashboard
+  //     } else if (userRole === "PARENT") {
+  //       navigate("/parent-dashboard"); // Redirect to Parent Dashboard
+  //     } else if (userRole === "DRIVER") {
+  //       navigate("/driver-dashboard"); // Redirect to Driver Dashboard
+  //     } else {
+  //       setErrorMessage("Invalid login. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Login failed:", error);
+  //     setErrorMessage("Invalid email or password. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
       const response = await axios.post("http://localhost:8080/login", null, {
         params: formData,
       });
-
-      const { userRole, message } = response.data; // Get userRole and message from response
-
+  
+      const { userRole, userId, email, password, firstName, lastName, message } = response.data; // Include firstName & lastName
+  
       alert(message); // Show login success message
-
-      // Store userRole in localStorage
-      localStorage.setItem("userRole", userRole);
-
+  
+      // Store all user details in localStorage
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({ userRole, userId, email, password, firstName, lastName })
+      );
+  
+      console.log("✅ Stored User Data:", { userRole, userId, email, firstName, lastName }); // Debugging
+  
       // Redirect based on user role
       if (userRole === "ADMIN") {
         navigate("/"); // Redirect to Admin Dashboard
@@ -145,6 +188,8 @@ const AdminLogin = () => {
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <div className="admin-login-container">
@@ -155,7 +200,7 @@ const AdminLogin = () => {
 
         <form onSubmit={handleSubmit}>
           <div>
-            <label>Email</label>
+            {/* <label>Email</label> */}
             <input
               type="email"
               name="email"
@@ -168,7 +213,7 @@ const AdminLogin = () => {
           </div>
 
           <div>
-            <label>Password</label>
+            {/* <label>Password</label> */}
             <input
               type="password"
               name="password"
